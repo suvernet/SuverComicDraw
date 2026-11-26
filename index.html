@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>SuverComicDraw</title>
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#20232a">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Comic+Neue:ital,wght@0,400;0,700;1,700&family=Impact&family=Montserrat:wght@600;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="splash.css">
+</head>
+<body>
+
+
+<!-- ===== Заставка SuverDraw ===== -->
+<div id="splash">
+  <div class="splash-card">
+    <img class="splash-art" src="cover.jpg" alt="SuverDraw" onerror="this.classList.add('broken')">
+    <div class="bar">
+        <div class="splash-title">SuverComicDraw</div>
+        <div class="splash-sub">Загрузка кистей…</div>
+        <div class="splash-bar"><div id="splashFill"></div></div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="controls">
+
+    <button id="theme-toggle-btn" title="Переключить тему (Тёмная/Светлая)"><div class="moon_sun">☽</div></button>
+    <div class="file-menu" id="fileMenu">
+        <button id="fileMenuBtn" title="Файл"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M4,20q-0.82,0-1.41-0.59T2,18V6Q2,5.18 2.59,4.59T4,4h6l2,2h8q0.83,0 1.41,0.59Q22,7.18 22,8H11.18l-2-2H4V18l2.4-8H23.5l-2.57,8.57q-0.2,0.65-0.74,1.04T19,20H4Zm2.1-2H19l1.8-6H7.9L6.1,18Zm0,0l1.8-6L6.1,18ZM4,8V6V8Z"/></svg></button>
+        <div class="file-menu-list" id="fileMenuList">
+            <div class="fm-sep">Открыть…</div>
+            <button class="open_folder" data-act="open-project"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M4,20q-0.82,0-1.41-0.59T2,18V6Q2,5.18 2.59,4.59T4,4h6l2,2h8q0.83,0 1.41,0.59Q22,7.18 22,8H11.18l-2-2H4V18l2.4-8H23.5l-2.57,8.57q-0.2,0.65-0.74,1.04T19,20H4Zm2.1-2H19l1.8-6H7.9L6.1,18Zm0,0l1.8-6L6.1,18ZM4,8V6V8Z"/></svg> Проект SuverComicDraw</button>
+            <button data-act="open-image">Открыть файл (PNG/JPEG)</button>
+
+            <div class="fm-sep">Сохранить как…</div>
+            <button data-act="save-suver">Сохранить проект (.suver) — свой формат</button>
+            <button data-act="save-png">Сохранить в PNG</button>
+            <button data-act="save-jpeg">Сохранить в JPG</button>
+            <button data-act="save-svg">Сохранить в SVG</button>
+            <button data-act="save-suver">Сохранить проект (.suver)</button>
+            <button data-act="save-project">Сохранить проект (.json)</button>
+        </div>
+    </div>
+    <input type="file" id="projectFile" accept=".suver,.json" style="display:none">
+    <input type="file" id="imageFile" accept="image/*" style="display:none">
+
+
+
+
+
+    <!-- Стабилизация пера (XP-Pen / мышь) -->
+    <button id="smooth-btn" class="active" title="Стабилизация штриха (Smooth / Lazy Mouse)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>
+
+    <!-- Окно референса -->
+    <button id="ref-btn" title="Окно референса (образец для комикса)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></button>
+    
+    <input type="file" id="refImageFile" accept="image/*" style="display:none">
+    <button id="pressure-btn" class="active" title="Нажим пера (стилус)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M13.78,4H7V2h8.78l-2,2Zm-4,4H4V6h7.78l-2,2Zm-4,4H1V10H7.78l-2,2Zm8.83,2L12,11.4l-5,5L9.6,19l5-5ZM13.43,9.98l2.6,2.6L21,7.6L18.4,5L13.43,9.98Zm-2.1-0.7l5.4,5.4L11,20.4Q10.4,21 9.6,21T8.2,20.4L8.15,20.35L7.5,21h-5l3.15-3.15L5.6,17.8Q5,17.2 5,16.4T5.6,15l5.73-5.73Zm0,0L17,3.6Q17.6,3 18.4,3t1.4,0.6l2.6,2.6Q23,6.8 23,7.6T22.4,9l-5.68,5.67l-5.4-5.4Z"/></svg></button>
+
+<div id="toolcol" class="tool-column">
+
+   
+
+   <button id="tool-brush" class="active tool-btn" title="Ручка"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M12.25,10.83l0.93,0.93L18.6,6.32L17.68,5.4l-5.43,5.43ZM5,19H5.93l5.82-5.83l-0.92-0.92L5,18.08V19Zm8.88-5.13l-3.75-3.75L14.3,5.95L13.58,5.22L8.1,10.7L6.7,9.3l5.45-5.48q0.6-0.6 1.41-0.6t1.41,0.6L15.7,4.55L16.95,3.3Q17.25,3 17.66,3t0.71,0.3L20.7,5.63Q21,5.93 21,6.34T20.7,7.05l-6.83,6.82ZM6.75,21H3V17.25l7.13-7.13l3.75,3.75L6.75,21Z"/></svg></button>
+
+    <button id="tool-soft" class="tool-btn" title="Мягкая кисть"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M5.29,14.71Q5,14.43 5,14t0.29-0.71T6,13t0.71,0.29T7,14T6.71,14.71T6,15q-0.42,0-0.71-0.29Zm0,4Q5,18.43 5,18t0.29-0.71T6,17t0.71,0.29T7,18T6.71,18.71T6,19q-0.42,0-0.71-0.29Zm0-8Q5,10.43 5,10Q5,9.57 5.29,9.29T6,9T6.71,9.29T7,10T6.71,10.71T6,11q-0.42,0-0.71-0.29ZM2.65,10.35Q2.5,10.2 2.5,10T2.65,9.65T3,9.5T3.35,9.65T3.5,10T3.35,10.35T3,10.5T2.65,10.35ZM5.29,6.71Q5,6.43 5,6T5.29,5.29T6,5T6.71,5.29T7,6T6.71,6.71T6,7Q5.58,7 5.29,6.71ZM2.65,14.35Q2.5,14.2 2.5,14t0.15-0.35T3,13.5t0.35,0.15T3.5,14T3.35,14.35T3,14.5T2.65,14.35Zm7,7Q9.5,21.2 9.5,21t0.15-0.35T10,20.5t0.35,0.15T10.5,21t-0.15,0.35T10,21.5T9.65,21.35Zm0-18Q9.5,3.2 9.5,3T9.65,2.65T10,2.5t0.35,0.15T10.5,3T10.35,3.35T10,3.5T9.65,3.35ZM9.29,6.71Q9,6.43 9,6T9.29,5.29Q9.58,5 10,5t0.71,0.29T11,6T10.71,6.71T10,7Q9.58,7 9.29,6.71ZM8.94,15.06Q8.5,14.63 8.5,14t0.44-1.06T10,12.5t1.06,0.44T11.5,14t-0.44,1.06T10,15.5T8.94,15.06Zm0-4Q8.5,10.63 8.5,10T8.94,8.94T10,8.5t1.06,0.44T11.5,10t-0.44,1.06T10,11.5T8.94,11.06Zm0.35,7.65Q9,18.43 9,18t0.29-0.71Q9.58,17 10,17t0.71,0.29T11,18t-0.29,0.71T10,19q-0.42,0-0.71-0.29ZM12,21V19q2.9,0 4.95-2.05T19,12T16.95,7.05T12,5V3q1.85,0 3.49,0.71t2.86,1.94t1.94,2.86T21,12t-0.71,3.49t-1.94,2.86t-2.86,1.94T12,21Zm0-9Z"/></svg></button>
+
+    <button id="tool-smudge" class="tool-btn" title="MyPaint"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M13.6,14L11,11.4l-5,5L8.6,19l5-5ZM12.43,9.98l2.6,2.6L20,7.6L17.4,5L12.43,9.98Zm-2.1-0.7l5.4,5.4L10,20.4Q9.4,21 8.6,21T7.2,20.4L7.15,20.35L6.5,21h-5l3.15-3.15L4.6,17.8Q4,17.2 4,16.4T4.6,15l5.73-5.73Zm0,0L16,3.6Q16.6,3 17.4,3t1.4,0.6l2.6,2.6Q22,6.8 22,7.6T21.4,9l-5.68,5.67l-5.4-5.4Z"/></svg></button>
+    
+    <button id="tool-blur" class="tool-btn" title="Аэрограф"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M13.93,8q-0.37,0-0.62-0.25T13.07,7.13t0.25-0.62t0.62-0.25t0.62,0.25T14.8,7.13T14.55,7.75T13.93,8Zm5.82,0q-0.37,0-0.62-0.25T18.88,7.13t0.25-0.62t0.62-0.25t0.62,0.25t0.25,0.62T20.37,7.75T19.75,8ZM16.84,6.06q-0.36,0-0.61-0.25T15.97,5.19t0.25-0.62t0.62-0.25t0.61,0.25T17.7,5.19T17.45,5.81T16.84,6.06Zm2.91-1.94q-0.37,0-0.62-0.25T18.88,3.25t0.25-0.62t0.62-0.25t0.62,0.25t0.25,0.62T20.37,3.87T19.75,4.12ZM16.84,9.94q-0.36,0-0.61-0.25T15.97,9.07t0.25-0.61t0.62-0.25t0.61,0.25T17.7,9.08q0,0.36-0.25,0.61T16.84,9.94Zm2.91,1.94q-0.37,0-0.62-0.25t-0.25-0.62t0.25-0.61t0.62-0.25t0.62,0.25t0.25,0.62q0,0.36-0.25,0.61t-0.62,0.25ZM5,19h5.9V10.88q0-0.13-0.09-0.22T10.6,10.58H5.31q-0.13,0-0.22,0.09T5,10.88V19ZM3.5,20.5V10.88q0-0.75 0.53-1.28T5.31,9.08H10.6q0.75,0 1.28,0.53t0.53,1.28V20.5H3.5ZM5.31,9.08V5.31q0-0.75 0.53-1.28T7.12,3.5H10.6V9.08H9.1V5H7.12Q6.98,5 6.89,5.09T6.81,5.31V9.08H5.31ZM5,19q0,0 0.09,0t0.22,0H10.6q0.13,0 0.22,0t0.09,0H5Z"/></svg></button>
+
+    <button id="tool-flat" class="tool-btn" title="Кисть"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M6,21q-1.13,0-2.22-0.55T2,19q0.65,0 1.33-0.51T4,17q0-1.25 0.88-2.13T7,14t2.13,0.88T10,17q0,1.65-1.17,2.82T6,21Zm0-2q0.83,0 1.41-0.59T8,17q0-0.43-0.29-0.71T7,16q-0.42,0-0.71,0.29T6,17q0,0.57-0.14,1.05q-0.14,0.47-0.36,0.9Q5.63,19 5.75,19T6,19Zm5.75-4L9,12.25L17.95,3.3q0.28-0.27 0.69-0.29T19.35,3.3L20.7,4.65Q21,4.95 21,5.35t-0.3,0.7L11.75,15ZM7,17Z"/></svg></button>
+
+    <button id="tool-airbrush" class="tool-btn" title="Маркер"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M6.8,21.4L5.85,20.45L4.8,21.5q-0.48,0.48-1.16,0.49T2.5,21.5q-0.48-0.48-0.48-1.15T2.5,19.2l1.05-1.05l-0.95-1L16.45,3.3Q16.75,3 17.18,3T17.9,3.3l2.8,2.8Q21,6.4 21,6.82T20.7,7.55L6.8,21.4Zm4.3-9.9L5.4,17.15L6.85,18.6l5.65-5.7l-1.4-1.4Z"/></svg></button>
+
+    <button id="tool-chalk" class="tool-btn" title="Мел"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M4,21V16.75L17.18,3.6q0.3-0.3 0.68-0.45T18.6,3Q19,3 19.36,3.15T20,3.6L21.4,5q0.3,0.27 0.45,0.64T22,6.4q0,0.38-0.15,0.75T21.4,7.82L8.25,21H4Zm2-2H7.4l9.83-9.8l-0.7-0.72L15.8,7.77L6,17.6V19ZM20,6.43L18.58,5L20,6.43ZM16.53,8.48L15.8,7.77L17.23,9.2l-0.7-0.72ZM14,21q1.85,0 3.43-0.93T19,17.5q0-0.9-0.47-1.55t-1.28-1.13L15.78,16.3q0.58,0.25 0.9,0.55T17,17.5q0,0.57-0.91,1.04T14,19q-0.42,0-0.71,0.29T13,20t0.29,0.71T14,21ZM4.58,13.35l1.5-1.5q-0.5-0.2-0.79-0.41T5,11q0-0.3 0.45-0.6t1.9-0.92q2.2-0.95 2.93-1.72Q11,6.97 11,6q0-1.38-1.1-2.19T7,3Q5.88,3 4.99,3.4T3.63,4.38Q3.35,4.7 3.4,5.1T3.78,5.75Q4.1,6.02 4.5,5.97Q4.9,5.93 5.18,5.65Q5.53,5.3 5.95,5.15T7,5Q8.03,5 8.51,5.3T9,6Q9,6.35 8.56,6.64T6.55,7.65q-2,0.88-2.78,1.59T3,11q0,0.8 0.43,1.36t1.15,0.99Z"/></svg></button>
+
+    <button id="tool-eraser" class="tool-btn" title="Ластик"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M16.98,18h4.71v1.5H15.48l1.5-1.5ZM4.65,19.5L2.88,17.73Q2.36,17.2 2.35,16.45t0.51-1.31L13.44,4.17q0.53-0.55 1.27-0.55t1.27,0.53l4.53,4.53q0.53,0.53 0.53,1.29t-0.52,1.29L12.48,19.5H4.65ZM11.84,18l7.63-7.83q0.08-0.08 0.08-0.22T19.47,9.73L14.95,5.21q-0.08-0.08-0.22-0.08T14.52,5.22L3.91,16.18Q3.84,16.27 3.84,16.4t0.08,0.22L5.29,18h6.55ZM12,12Z"/></svg></button>
+
+    <button id="tool-line" class="tool-btn" title="Прямая линия"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><line x1="4" y1="20" x2="20" y2="4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+
+    <button id="tool-rect" class="tool-btn" title="Прямоугольник (кадр комикса)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/></svg></button>
+
+    <button id="tool-ellipse" class="tool-btn" title="Эллипс (бабл реплики)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8.5"/></svg></button>  
+
+    <button id="tool-text" class="tool-btn" title="Текст"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M7,20V7H2V4H15V7H10V20H7Zm9,0V12H13V9h9v3H19v8H16Z"/></svg></button>
+
+    <button id="tool-fill" class="tool-btn" title="Заливка"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M8.65,20.5L2.5,14.35Q2.25,14.1 2.13,13.8T2,13.18t0.13-0.63T2.5,12L8.25,6.27L5.6,3.63L7.15,2l10,10q0.25,0.25 0.36,0.55q0.11,0.3 0.11,0.63T17.51,13.8t-0.36,0.55L11,20.5q-0.25,0.25-0.55,0.38T9.83,21T9.2,20.88T8.65,20.5ZM9.83,7.85L4.48,13.2h10.7L9.83,7.85ZM19.8,21q-0.9,0-1.52-0.64T17.65,18.8q0-0.68 0.34-1.28q0.34-0.6 0.76-1.17L19.8,15l1.1,1.35q0.4,0.57 0.75,1.17Q22,18.13 22,18.8q0,0.93-0.65,1.56T19.8,21Z"/></svg></button>
+
+    <button id="tool-select" class="tool-btn" title="Выделение: двигать, масштабировать, вращать"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M11,21V11H21v2H14.4L21,19.6L19.6,21L13,14.4V21H11ZM7,21V19H9v2H7ZM5,5H3Q3,4.17 3.59,3.59T5,3V5ZM7,5V3H9V5H7Zm4,0V3h2V5H11Zm4,0V3h2V5H15Zm4,0V3q0.83,0 1.41,0.59T21,5H19ZM5,19v2q-0.83,0-1.41-0.59T3,19H5ZM3,17V15H5v2H3Zm0-4V11H5v2H3ZM3,9V7H5V9H3ZM19,9V7h2V9H19Z"/></svg></button>
+    <button id="tool-panel" title="Панель комикса: тянуть рамку"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M3,3h8v8H3V3ZM5,5V9V5Zm8-2h8v8H13V3Zm2,2V9V5ZM3,13h8v8H3V13Zm2,2v4V15Zm11-2h2v3h3v2H18v3H16V18H13V16h3V13ZM15,5V9h4V5H15ZM5,5V9H9V5H5ZM5,15v4H9V15H5Z"/></svg></button> 
+</div>
+
+    <select id="panel-templates" title="Шаблоны раскадровки комиксов" style="max-width:145px; font-size:12px; padding:3px 6px;">
+        <option value="">Шаблоны страниц</option>
+        <optgroup label="Классические кадры">
+            <option value="grid2x2">Сетка 2×2</option>
+            <option value="rows3">3 полосы</option>
+            <option value="splash2">Сплэш + 2 кадра</option>
+            <option value="grid3x3">Сетка 3×3</option>
+            <option value="asym">Асимметрия 1+2+1</option>
+        </optgroup>
+        <optgroup label="Динамика и Манга (косые)">
+            <option value="diagonal_split">Косой разрез (Дуэль)</option>
+            <option value="manga_action">Экшен Манга (1 + 2 косых + 1)</option>
+            <option value="manga_diagonal3">3 косых полосы (Динамика)</option>
+            <option value="shonen_slash">Сёнэн 4 кадра (Крест-накос)</option>
+        </optgroup>
+    </select>
+    <div class="pen_press">
+     <!-- <span id="penpress">Нажим пера</span> -->
+    <input type="range" id="pressInput" min="0" max="1" step="0.05" value="1" title="Чувствительность нажима">
+    <span id="pressVal" class="mini-val">1.0</span>
+    </div>
+    <div class="radius">
+    <input type="range" id="thickness" min="1" max="120" value="2" title="Толщина / радиус">
+    <span id="thickness-val" class="hint">2</span>
+    </div>
+    <div class="transp">
+    <input type="range" id="opacity" min="0.1" max="1" step="0.1" value="1" title="Прозрачность">
+    <span id="opacity-val" class="hint">1.0</span>
+    </div>
+    
+    <!-- Панель настроек текста (показывается при выборе инструмента Текст) -->
+    <div id="text-options" class="text-options" style="display:none;">
+        <select id="font-family" class="font-select" title="Шрифт текста">
+            <option value="'Comic Relief', cursive, sans-serif" selected>Comic Relief (Комикс рус)</option>
+            <option value="'Anime Ace', sans-serif">Anime Ace (Классика манги рус)</option>
+            <option value="'Manga Speak', sans-serif">Manga Speak (Манга Bold eng)</option>
+            <option value="'Suplexmentary Comic', cursive, sans-serif">Suplexmentary Comic (рус)</option>
+            <option value="'v_Comic Geek', normal">v_Comic Geek (рус)</option>
+            <option value="'v_Whiskey Bravo Victor', regular">v_Whiskey Bravo Victor (рус)</option>
+            <option value="'SF Wonder Comic Blotch Italic', cursive">SF Wonder Comic Blotch Italic (eng)</option>
+            <option value="'SF Slapstick Comic Bold Oblique', regular">SF Slapstick Comic Bold (eng)</option>
+            <option value="'Bad Script', cursive">Bad Script (Рукописный рус)</option>
+            <option value="'Roboto Condensed', sans-serif">Roboto Condensed</option>
+            <option value="sans-serif">Sans-serif (Системный)</option>
+            <option value="serif">Serif (С засечками)</option>
+            <option value="monospace">Monospace (Машинка)</option>
+        </select>
+        <input type="number" id="font-size" value="28" min="8" max="200" title="Размер шрифта (px)" style="width: 48px; padding: 2px 4px; font-size: 13px;">
+        <button id="font-bold-btn" class="font-toggle-btn active" title="Жирный шрифт (Bold)"><b>B</b></button>
+        <button id="font-italic-btn" class="font-toggle-btn" title="Курсив (Italic)"><i>I</i></button>
+    </div>
+
+    <button id="zoom-btn" title="Сбросить зум">100%</button>
+
+    <button id="undo" title="Отменить"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M7,19V17h7.1q1.57,0 2.74-1T18,13.5T16.84,11T14.1,10H7.8l2.6,2.6L9,14L4,9L9,4l1.4,1.4L7.8,8h6.3q2.43,0 4.16,1.57T20,13.5t-1.74,3.93Q16.53,19 14.1,19H7Z"/></svg></button>
+
+    <button id="redo" title="Вернуть"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M9.9,19q-2.42,0-4.16-1.57T4,13.5T5.74,9.57T9.9,8h6.3L13.6,5.4L15,4l5,5l-5,5l-1.4-1.4L16.2,10H9.9q-1.57,0-2.74,1T6,13.5T7.16,16T9.9,17H17v2H9.9Z"/></svg></button>
+
+    <button id="clear" title="Очистить слой (Shift — все слои)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M7,21q-0.82,0-1.41-0.59T5,19V6H4V4H9V3h6V4h5V6H19V19q0,0.82-0.59,1.41T17,21H7ZM17,6H7V19H17V6ZM9,17h2V8H9v9Zm4,0h2V8H13v9ZM7,6V19V6Z"/></svg></button>
+
+</div>
+
+
+<div id="main">
+    <canvas id="c"></canvas>
+
+    <div id="layers-panel">
+        <div id="palettePanel">
+            <div class="pal-head">Цвет</div>
+            <div class="pal-body">
+                <div class="pal-pickers">
+                    <canvas id="svBox" width="140" height="140"></canvas>
+                    <canvas id="hueBar" width="18" height="140"></canvas>
+                </div>
+                <div class="pal-side">
+                    <div id="palCurrent" title="Текущий цвет"></div>
+                    <div id="recentsRow"></div>
+                    <div class="pal-label">Последние</div>
+                </div>
+            </div>
+        </div>
+
+                <div class="gimp-layers-container">
+            <div class="gimp-layers-header">
+                <span class="gimp-panel-title">Слои</span>
+            </div>
+
+            <!-- Верхняя часть как в GIMP: Режим наложения и Непрозрачность -->
+            <div class="gimp-layers-top-controls">
+                <div class="gimp-control-row">
+                    <label for="layer-blend-mode-global" class="gimp-label">Режим:</label>
+                    <select id="layer-blend-mode-global" class="gimp-select" title="Режим наложения активного слоя">
+                        <option value="source-over">Нормальный</option>
+                        <option value="multiply">Умножение (Multiply)</option>
+                        <option value="screen">Экран (Screen)</option>
+                        <option value="overlay">Перекрытие (Overlay)</option>
+                        <option value="darken">Затемнение (Darken)</option>
+                        <option value="lighten">Осветление (Lighten)</option>
+                        <option value="color-dodge">Осветление основы</option>
+                        <option value="color-burn">Затемнение основы</option>
+                        <option value="hard-light">Жёсткий свет</option>
+                        <option value="soft-light">Мягкий свет</option>
+                        <option value="difference">Разница</option>
+                        <option value="exclusion">Исключение</option>
+                    </select>
+                </div>
+                <div class="gimp-control-row">
+                    <label for="layer-opacity-slider-global" class="gimp-label">Непрозрачность:</label>
+                    <input type="range" id="layer-opacity-slider-global" class="gimp-slider" min="0" max="100" value="100" title="Непрозрачность активного слоя">
+                    <input type="number" id="layer-opacity-val-global" class="gimp-num-input" min="0" max="100" value="100" title="Точное значение непрозрачности (%)">
+                    <span class="gimp-unit">%</span>
+                </div>
+            </div>
+
+            <!-- Список слоёв (снизу вверх отображается в порядке наложения, как в GIMP) -->
+            <div id="layers-list" class="gimp-layers-list"></div>
+
+            <!-- Нижняя панель кнопок как в GIMP -->
+            <div class="gimp-layers-footer">
+                <button type="button" id="btn-layer-new" class="gimp-footer-btn" title="Создать новый слой">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                </button>
+                <button type="button" id="btn-layer-up" class="gimp-footer-btn" title="Поднять слой выше">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>
+                </button>
+                <button type="button" id="btn-layer-down" class="gimp-footer-btn" title="Опустить слой ниже">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                </button>
+                <button type="button" id="btn-layer-duplicate" class="gimp-footer-btn" title="Создать копию слоя">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                </button>
+                <button type="button" id="btn-layer-merge" class="gimp-footer-btn" title="Объединить с предыдущим слоем">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                </button>
+                <button type="button" id="group-all-btn" class="gimp-footer-btn" title="Объединить все слои в один">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3,21V15H5v4H9v2H3Zm12,0V19h4V15h2v6H15ZM7.18,15.83l-1.43-1.4L7.18,13H2V11H7.18L5.75,9.57l1.43-1.4L11,12L7.18,15.83Zm9.65,0L13,12l3.82-3.83l1.43,1.4L16.83,11H22v2H16.83l1.43,1.42l-1.43,1.4ZM3,9V3H9V5H5V9H3ZM19,9V5H15V3h6V9H19Z"/></svg>
+                </button>
+                <button type="button" id="btn-layer-delete" class="gimp-footer-btn gimp-delete-btn" title="Удалить активный слой">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                </button>
+                <!-- Скрытая совместимость для старого селектора #add-layer если где-то остался -->
+                <button id="add-layer" type="button" style="display:none;"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="save-overlay">
+    <img id="saved-img" alt="Ваш рисунок">
+    <a id="download-link" download="drawing.png">Скачать</a>
+    <button onclick="document.getElementById('save-overlay').style.display='none'">Закрыть</button>
+    <button id="duplicate-btn" title="Создать копию слоя"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M14,16h2V13h3V11H16V8H14v3H11v2h3v3ZM6,20.5q-2.72-0.95-4.36-3.29Q0,14.88 0,12T1.64,6.79T6,3.5V5.7Q4.15,6.57 3.08,8.27Q2,9.98 2,12q0,2.02 1.08,3.72T6,18.3v2.2Zm5.49-0.21q-1.64-0.71-2.85-1.93T6.71,15.51T6,12T6.71,8.49T8.64,5.64q1.21-1.21 2.85-1.93T15,3t3.51,0.71t2.85,1.93t1.93,2.85T24,12t-0.71,3.51t-1.93,2.85t-2.85,1.93Q16.88,21 15,21t-3.51-0.71ZM15,12Zm0,7q2.93,0 4.96-2.04Q22,14.93 22,12q0-2.93-2.04-4.96T15,5T10.04,7.04T8,12t2.04,4.96T15,19Z"/></svg></button>
+</div>
+
+<footer id="appFooter">
+    <span id="ftTool">Кисть</span>
+    <input type="color" id="color" value="#000000" title="Цвет">
+
+    <span id="ftCanvasSize">—</span>
+    <span class="ft-sep"></span>
+
+    <span id="ftFileName" class="ft-muted">Мой рисунок</span>
+    <span class="ft-spacer"></span>
+
+    <span id="ftBgLabel">Фон:</span>
+    <input type="color" id="bg-color" value="#FFFFFF" title="Цвет фона">
+    <select id="ftBgSelect">
+        <option value="white">Белый</option>
+        <option value="transparent">Прозрачный</option>
+        <option value="grid">Сетка</option>
+        <option value="lined">Линовка</option>
+    </select>
+
+    <span class="ft-sep"></span>
+
+    <span id="ftZoom">100%</span>
+    <span class="ft-sep"></span>
+
+    <span id="ftClock"></span>
+    <span class="ft-sep"></span>
+
+    <span class="ft-muted">SuverComicDraw</span>
+</footer>
+
+<script src="js/autosave.js" defer></script>
+<script src="js/config.js"  defer></script>
+<script src="js/utils.js"   defer></script>
+<script src="js/tools.js"   defer></script>
+<script src="js/selection.js"   defer></script>
+<script src="js/render.js"  defer></script>
+<script src="js/history.js" defer></script>
+<script src="js/palette.js" defer></script>
+<script src="js/footer.js"  defer></script>
+<script src="js/events.js"  defer></script>
+<script src="js/save.js"    defer></script>
+<script src="js/layers.js"  defer></script>
+<script src="js/main.js"    defer></script>
+<script src="js/hotkeys.js" defer></script>
+<script src="js/files.js" defer></script>
+
+
+
+
+<!-- Плавающее окно референса -->
+<div id="reference-panel" class="ref-panel" style="display:none;">
+    <div class="ref-header" id="refHeader">
+        <span>Референс</span>
+        <div class="ref-actions">
+            <button id="refLoadBtn" title="Загрузить картинку">📁</button>
+            <button id="refPipetteBtn" title="Взять цвет с референса">💧</button>
+            <button id="refCloseBtn" title="Закрыть">✕</button>
+        </div>
+    </div>
+    <div class="ref-body">
+        <canvas id="refCanvas"></canvas>
+        <div id="refEmptyPrompt">Перетащите сюда картинку или нажмите 📁</div>
+    </div>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW reg error:', err));
+    });
+}
+</script>
+
+
+<!-- Модальное окно редактирования текста (по фэн-шую) -->
+<div id="text-modal-backdrop" class="modal-backdrop" style="display:none;">
+    <div id="canvas-text-overlay" class="comic-modal">
+        <div class="modal-header">
+            <span id="modal-title">Редактирование текста</span>
+            <button id="text-cancel-btn" class="modal-close-btn" title="Закрыть (Esc)">✕</button>
+        </div>
+        <div class="modal-body">
+            <textarea id="canvas-text-editor" placeholder="Введите текст реплики комикса..."></textarea>
+            <div class="modal-hint">Подсказка: перенос строки — Enter, сохранить — Ctrl+Enter</div>
+        </div>
+        <div class="modal-footer">
+            <button id="text-cancel-btn-2" class="btn-secondary">Отмена</button>
+            <button id="text-apply-btn" class="btn-primary">✓ Применить</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+// Мини-загрузчик: ползунок идёт по мере готовности скриптов, прячется сам.
+(function () {
+  var fill = document.getElementById('splashFill');
+  var sub = document.querySelector('.splash-sub');
+  var scripts = Array.prototype.slice.call(document.querySelectorAll('script[defer][src]'));
+  var total = scripts.length || 1, done = 0;
+  var born = Date.now();
+  var MIN_SHOW = 999500; // заставка висит минимум 2.5 сек — картинку успеешь разглядеть
+  function paint(msg) {
+    done++;
+    if (fill) fill.style.width = Math.round(done / total * 100) + '%';
+    if (msg && sub) sub.textContent = msg;
+    if (done >= total) {
+      var wait = Math.max(0, MIN_SHOW - (Date.now() - born));
+      setTimeout(hide, 400 + wait);
+    }
+  }
+  function hide() {
+    var s = document.getElementById('splash');
+    if (!s) return;
+    s.classList.add('hide');
+    setTimeout(function () { s.remove(); }, 500);
+  }
+  scripts.forEach(function (sc) {
+    sc.addEventListener('load', function () { paint(); });
+    sc.addEventListener('error', function () { paint('Ошибка: ' + sc.getAttribute('src')); });
+  });
+  // Страховка: если defer-скрипт уже в кэше и load не выстрелил
+  setTimeout(function () {
+    if (document.getElementById('splash')) {
+      var ready = 0;
+      scripts.forEach(function (sc) {
+        if (sc.getAttribute('data-done')) ready++;
+      });
+      if (ready === 0) { paint('Готово'); hide(); }
+    }
+  }, 4000);
+  // Фолбэк: скрыть по window.load в любом случае
+  window.addEventListener('load', function () { paint('Готово'); });
+})();
+</script>
+
+
+
+<script>window.__CF$cv$params={r:'a5f3d1db89e98d6f',t:'MTc5NTQ3NTEzNw==',u:'01a20aa866e27632b42cfc61011b2717',ut:'owhiJq.EuaVdi2ycdmw9MtML0vk14KaOhpj5m.b.dGE-1795475138-1.2.1.1-UT4cd3GxsglacF79pD4rRaC3cYBEatTuUx2i.infI9k5Nbpq8w2mscNRGpqFE1cw7Xm9ZTFjwVxqLX8i73s22alz9i2dr.a1.FFbEb2Y7E4',i:60};(function(){if(!document.body)return;var l=window.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/precursor/main.js?ray=a5f3d1db89e98d6f',s=document.createElement('script');s.src=o?new URL(u,o).href:u;document.head.appendChild(s);})();</script></body>
+</html>
