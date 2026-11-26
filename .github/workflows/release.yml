@@ -3,7 +3,7 @@ name: Build & Release
 on:
   push:
     tags:
-      - 'v*' # Запускать при создании тега версии (например, v1.0.0)
+      - 'v*'
 
 jobs:
   build:
@@ -43,5 +43,5 @@ jobs:
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "SuverComicDraw ${{ github.ref_name }}"
-          releaseDraft: true # Создаст черновик релиза
+          releaseDraft: true
           prerelease: false
